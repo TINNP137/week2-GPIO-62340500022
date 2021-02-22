@@ -281,8 +281,8 @@ GPIO_TypeDef* ButtonMatrixPort[8] = {GPIOA,       GPIOB,      GPIOB,      GPIOB,
 uint16_t      ButtonMatrixPin [8] = {GPIO_PIN_10, GPIO_PIN_3, GPIO_PIN_5, GPIO_PIN_4,        GPIO_PIN_9, GPIO_PIN_7, GPIO_PIN_6, GPIO_PIN_7};
 uint8_t       ButtonMatrixLine    = 0;
 GPIO_PinState SwitchState[2];
-int DataBuffer=0;
-int Show=62340500022;
+long long DataBuffer=0;
+//long long Show= 62340500022;
 void ButtonMatrixUpdate()
 {
 	if(HAL_GetTick() - ButtonMatrixTimeStamp >= 100)
@@ -340,6 +340,15 @@ void ButtonMatrixUpdate()
 			       else if(ButtonMatrixState ==8 ) //clear
 			       {
 			        	DataBuffer = 0;
+			       }
+			       else if(ButtonMatrixState ==32768) //ok
+			       {
+			    	   DataBuffer = DataBuffer * 0.10;
+			    	   if(DataBuffer ==62340500022)
+			    	   {
+			    		   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+			    	   }
+
 			       }
 
 			       else
