@@ -95,8 +95,9 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   //--------------------------------------------------------------------------------
-
-
+  //GPIO_PinState SwitchState[2];
+  //int DataBuffer=0;
+  //int Show=0;
 
   //--------------------------------------------------------------------------------
   /* USER CODE END 2 */
@@ -108,6 +109,13 @@ int main(void)
   while (1)
   {
 	  ButtonMatrixUpdate();
+	  //HAL_GPIO_WritePin(ButtonMatrixPort[NowOutputPin], ButtonMatrixPin[NowOutputPin], GPIO_PIN_SET);
+//	  if(HAL_GetTick() - ButtonMatrixTimeStamp >= 20)
+	  //   {
+		//  ButtonMatrixTimeStamp = HAL_GetTick();
+
+
+	//     }
 
 
 
@@ -272,17 +280,74 @@ static void MX_GPIO_Init(void)
 GPIO_TypeDef* ButtonMatrixPort[8] = {GPIOA,       GPIOB,      GPIOB,      GPIOB,             GPIOA,      GPIOC,      GPIOB,      GPIOA     };
 uint16_t      ButtonMatrixPin [8] = {GPIO_PIN_10, GPIO_PIN_3, GPIO_PIN_5, GPIO_PIN_4,        GPIO_PIN_9, GPIO_PIN_7, GPIO_PIN_6, GPIO_PIN_7};
 uint8_t       ButtonMatrixLine    = 0;
+GPIO_PinState SwitchState[2];
+int DataBuffer=0;
+int Show=62340500022;
 void ButtonMatrixUpdate()
 {
-	if(HAL_GetTick() - ButtonMatrixTimeStamp >= 20)
+	if(HAL_GetTick() - ButtonMatrixTimeStamp >= 100)
 	{
 		ButtonMatrixTimeStamp = HAL_GetTick();
+	         //Press = Low , No = High
 		for(int i = 0; i < 4; i++)
 		{
 			GPIO_PinState PinState = HAL_GPIO_ReadPin(ButtonMatrixPort[i], ButtonMatrixPin[i]);
 			if(PinState == GPIO_PIN_RESET) // Button is Pressed
 			{
 				ButtonMatrixState |= (uint16_t)1 << (i + ButtonMatrixLine * 4);
+
+			       DataBuffer = DataBuffer * 10;
+			       if(ButtonMatrixState == 1)
+			       {
+			        DataBuffer += 7;
+			       }
+			       else if(ButtonMatrixState == 2)
+			       {
+			      	DataBuffer += 8;
+		           }
+			       else if(ButtonMatrixState == 4)
+			       {
+			        DataBuffer += 9;
+			       }
+			       else if(ButtonMatrixState == 16)
+			       {
+			        	DataBuffer += 4;
+			       }
+			       else if(ButtonMatrixState == 32)
+			       {
+			        	DataBuffer += 5;
+			       }
+			       else if(ButtonMatrixState == 64)
+			       {
+			        	DataBuffer += 6;
+			       }
+			       else if(ButtonMatrixState == 256)
+			       {
+			        	DataBuffer += 1;
+			       }
+			       else if(ButtonMatrixState == 512)
+			       {
+			        	DataBuffer += 2;
+			       }
+			       else if(ButtonMatrixState == 1024)
+			       {
+			        	DataBuffer += 3;
+			       }
+			       else if(ButtonMatrixState == 4096)
+			       {
+			        	DataBuffer += 0;
+			       }
+			       else if(ButtonMatrixState ==8 ) //clear
+			       {
+			        	DataBuffer = 0;
+			       }
+
+			       else
+			       {
+			    	   DataBuffer = DataBuffer * 0.10;
+			       }
+
+			       //SwitchState[1] = SwitchState[0];
 
 			}
 			else
@@ -297,6 +362,7 @@ void ButtonMatrixUpdate()
 
 		uint8_t NextOutputPin = ButtonMatrixLine + 4;
 		HAL_GPIO_WritePin(ButtonMatrixPort[NextOutputPin], ButtonMatrixPin[NextOutputPin], GPIO_PIN_RESET);
+		SwitchState[0] = HAL_GPIO_ReadPin(ButtonMatrixPort[NowOutputPin], ButtonMatrixPin[NowOutputPin]);
 	}
 }
 
