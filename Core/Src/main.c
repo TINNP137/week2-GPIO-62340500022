@@ -282,6 +282,7 @@ uint16_t      ButtonMatrixPin [8] = {GPIO_PIN_10, GPIO_PIN_3, GPIO_PIN_5, GPIO_P
 uint8_t       ButtonMatrixLine    = 0;
 GPIO_PinState SwitchState[2];
 long long DataBuffer=0;
+int mod =0;
 //long long Show= 62340500022;
 void ButtonMatrixUpdate()
 {
@@ -300,14 +301,17 @@ void ButtonMatrixUpdate()
 			       if(ButtonMatrixState == 1)
 			       {
 			        DataBuffer += 7;
+			        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 			       }
 			       else if(ButtonMatrixState == 2)
 			       {
 			      	DataBuffer += 8;
+			      	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 		           }
 			       else if(ButtonMatrixState == 4)
 			       {
 			        DataBuffer += 9;
+			        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 			       }
 			       else if(ButtonMatrixState == 16)
 			       {
@@ -316,30 +320,43 @@ void ButtonMatrixUpdate()
 			       else if(ButtonMatrixState == 32)
 			       {
 			        	DataBuffer += 5;
+			        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 			       }
 			       else if(ButtonMatrixState == 64)
 			       {
 			        	DataBuffer += 6;
+			        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 			       }
 			       else if(ButtonMatrixState == 256)
 			       {
 			        	DataBuffer += 1;
+			        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 			       }
 			       else if(ButtonMatrixState == 512)
 			       {
 			        	DataBuffer += 2;
+			        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 			       }
 			       else if(ButtonMatrixState == 1024)
 			       {
 			        	DataBuffer += 3;
+			        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 			       }
 			       else if(ButtonMatrixState == 4096)
 			       {
 			        	DataBuffer += 0;
+			        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 			       }
 			       else if(ButtonMatrixState ==8 ) //clear
 			       {
+			    	    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 			        	DataBuffer = 0;
+			       }
+			       else if(ButtonMatrixState ==128 ) //backspace
+			       {
+			    	    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+			    	    DataBuffer = DataBuffer * 0.010;
+
 			       }
 			       else if(ButtonMatrixState ==32768) //ok
 			       {
@@ -347,6 +364,10 @@ void ButtonMatrixUpdate()
 			    	   if(DataBuffer ==62340500022)
 			    	   {
 			    		   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+			    	   }
+			    	   else
+			    	   {
+			    		   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 			    	   }
 
 			       }
