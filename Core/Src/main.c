@@ -47,6 +47,7 @@ UART_HandleTypeDef huart2;
 uint16_t ButtonMatrixState = 0;
 uint32_t ButtonMatrixTimeStamp = 0;
 uint16_t SwitchState[2];
+int limit =0;
 uint32_t State=0;
 long long DataBuffer=0;
 enum _StateDisplay
@@ -129,10 +130,14 @@ int main(void)
   {
 	  ButtonMatrixUpdate();
 	  check();
-	  if (SwitchState[0] == 0 && SwitchState[1] != 0)
-	 	  {
-	 		  SwitchState[1] = SwitchState[0];
-	 	  }
+	  if (DataBuffer >= 623405000220)
+	  {
+		  DataBuffer = 62340500022;
+	  }
+//	  if (SwitchState[0] == 0 && SwitchState[1] != 0)
+//	 	  {
+//	 		  SwitchState[1] = SwitchState[0];
+//	 	  }
 //	  SwitchState[0] = ButtonMatrixState;
 //	  if(SwitchState[0] != 0 && SwitchState[1] == 0)
 //	  {
@@ -440,7 +445,6 @@ void check()
   if(SwitchState[0] != 0 && SwitchState[1] == 0)
   {
 	  DataBuffer = DataBuffer * 10;
-
 	  if(ButtonMatrixState == 1)
 	  {
 	   DataBuffer += 7;
@@ -520,6 +524,10 @@ void check()
 	  }
 	  SwitchState[1] = SwitchState[0];
   }
+  if (SwitchState[0] == 0 && SwitchState[1] != 0)
+	 	  {
+	 		  SwitchState[1] = SwitchState[0];
+	 	  }
  }
   /* USER CODE END 3 */
 
