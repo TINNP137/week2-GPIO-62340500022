@@ -444,51 +444,52 @@ void check()
 	  if(ButtonMatrixState == 1)
 	  {
 	   DataBuffer += 7;
-	   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+//	   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	  }
 	  else if(ButtonMatrixState == 2)
 	  {
 		DataBuffer += 8;
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+//		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	  }
 	  else if(ButtonMatrixState == 4)
 	  {
 	   DataBuffer += 9;
-	   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+//	   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	  }
 	  else if(ButtonMatrixState == 16)
 	  {
 		DataBuffer += 4;
+		//	   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	  }
 	  else if(ButtonMatrixState == 32)
 	  {
 		DataBuffer += 5;
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+//		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	  }
 	  else if(ButtonMatrixState == 64)
 	  {
 		DataBuffer += 6;
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+//		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	  }
 	  else if(ButtonMatrixState == 256)
 	  {
 		DataBuffer += 1;
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+//		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	  }
 	  else if(ButtonMatrixState == 512)
 	  {
 		DataBuffer += 2;
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+//		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	  }
 	  else if(ButtonMatrixState == 1024)
 	  {
 		DataBuffer += 3;
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+//		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	  }
 	  else if(ButtonMatrixState == 4096)
 	  {
 		DataBuffer += 0;
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+//		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	  }
 	  else if(ButtonMatrixState ==8 ) //clear
 	  {
@@ -497,7 +498,7 @@ void check()
 	  }
 	  else if(ButtonMatrixState ==128 ) //backspace
 	  {
-		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+//		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 		DataBuffer = DataBuffer * 0.010;
 
 	  }
