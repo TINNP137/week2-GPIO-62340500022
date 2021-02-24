@@ -46,7 +46,25 @@ UART_HandleTypeDef huart2;
 
 uint16_t ButtonMatrixState = 0;
 uint32_t ButtonMatrixTimeStamp = 0;
-
+uint16_t SwitchState[2];
+uint32_t State=0;
+long long DataBuffer=0;
+enum _StateDisplay
+{
+  StateDisplay_Start = 0,
+  StateDisplay_Num1=1,
+  StateDisplay_Num2=2,
+  StateDisplay_Num3=3,
+  StateDisplay_Num4=4,
+  StateDisplay_Num5=5,
+  StateDisplay_Num6=6,
+  StateDisplay_Num7=7,
+  StateDisplay_Num8=8,
+  StateDisplay_Num9=9,
+  StateDisplay_Num10=10,
+  StateDisplay_Sucess=11,
+  StateDisplay_Error=12
+};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -77,7 +95,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+   HAL_Init();
 
   /* USER CODE BEGIN Init */
 
@@ -99,23 +117,311 @@ int main(void)
   //int DataBuffer=0;
   //int Show=0;
 
+
   //--------------------------------------------------------------------------------
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
+  //long long DataBuffer=0;
   //--------------------------------------------------------------------------------
   while (1)
   {
 	  ButtonMatrixUpdate();
-	  //HAL_GPIO_WritePin(ButtonMatrixPort[NowOutputPin], ButtonMatrixPin[NowOutputPin], GPIO_PIN_SET);
-//	  if(HAL_GetTick() - ButtonMatrixTimeStamp >= 20)
-	  //   {
-		//  ButtonMatrixTimeStamp = HAL_GetTick();
+	  check();
+	  if (SwitchState[0] == 0 && SwitchState[1] != 0)
+	 	  {
+	 		  SwitchState[1] = SwitchState[0];
+	 	  }
+//	  SwitchState[0] = ButtonMatrixState;
+//	  if(SwitchState[0] != 0 && SwitchState[1] == 0)
+//	  {
+//		  switch(State)
+//		  {
+//			  case StateDisplay_Start: //state=0 number 6
+//				  if(ButtonMatrixState == 64)//6
+//				  {
+//					  State =1;
+//				  }
+//				  else if(ButtonMatrixState ==8 ) //clear
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==128 ) //backspace
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==2048 || ButtonMatrixState ==8192 || ButtonMatrixState ==16384) //blank
+//				  {
+//					State=0;
+//				  }
+//				  else //even ok is error
+//				  {
+//					State=StateDisplay_Error;
+//				  }
+//				  break;
+//			  case StateDisplay_Num1 : //state = 1 number 2
+//				  if(ButtonMatrixState == 512)//2
+//				  {
+//					  State =2;
+//				  }
+//				  else if(ButtonMatrixState ==8 ) //clear
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==128 ) //backspace
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==2048 || ButtonMatrixState ==8192 || ButtonMatrixState ==16384) //blank
+//				  {
+//					State=1;
+//				  }
+//				  else
+//				  {
+//					State=StateDisplay_Error;
+//				  }
+//				  break;
+//			 case StateDisplay_Num2 : //state = 2 number 3
+//				  if(ButtonMatrixState == 1024)//3
+//				  {
+//					  State =3;
+//				  }
+//				  else if(ButtonMatrixState ==8 ) //clear
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==128 ) //backspace
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==2048 || ButtonMatrixState ==8192 || ButtonMatrixState ==16384) //blank
+//				  {
+//					State=2;
+//				  }
+//				  else
+//				  {
+//					State=StateDisplay_Error;
+//				  }
+//				  break;
+//			 case StateDisplay_Num3 : //state = 3 number 4
+//				  if(ButtonMatrixState == 16)//4
+//				  {
+//					  State =4;
+//				  }
+//				  else if(ButtonMatrixState ==8 ) //clear
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==128 ) //backspace
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==2048 || ButtonMatrixState ==8192 || ButtonMatrixState ==16384) //blank
+//				  {
+//					State=3;
+//				  }
+//				  else
+//				  {
+//					State=StateDisplay_Error;
+//				  }
+//				  break;
+//			  case StateDisplay_Num4 : //state = 4 number 0
+//				  if(ButtonMatrixState == 4096)//0
+//				  {
+//					  State =5;
+//				  }
+//				  else if(ButtonMatrixState ==8 ) //clear
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==128 ) //backspace
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==2048 || ButtonMatrixState ==8192 || ButtonMatrixState ==16384) //blank
+//				  {
+//					State=4;
+//				  }
+//				  else
+//				  {
+//					State=StateDisplay_Error;
+//				  }
+//				  break;
+//			  case StateDisplay_Num5 : //state = 5 number 5
+//				  if(ButtonMatrixState == 32)//5
+//				  {
+//					  State =6;
+//				  }
+//				  else if(ButtonMatrixState ==8 ) //clear
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==128 ) //backspace
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==2048 || ButtonMatrixState ==8192 || ButtonMatrixState ==16384) //blank
+//				  {
+//					State=5;
+//				  }
+//				  else
+//				  {
+//					State=StateDisplay_Error;
+//				  }
+//				  break;
+//			  case StateDisplay_Num6 : //state = 6 number 0
+//				  if(ButtonMatrixState == 4096)//0
+//				  {
+//					  State =7;
+//				  }
+//				  else if(ButtonMatrixState ==8 ) //clear
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==128 ) //backspace
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==2048 || ButtonMatrixState ==8192 || ButtonMatrixState ==16384) //blank
+//				  {
+//					State=6;
+//				  }
+//				  else
+//				  {
+//					State=StateDisplay_Error;
+//				  }
+//				  break;
+//			  case StateDisplay_Num7 : //state = 7 number 0
+//				  if(ButtonMatrixState == 4096)//0
+//				  {
+//					  State =8;
+//				  }
+//				  else if(ButtonMatrixState ==8 ) //clear
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==128 ) //backspace
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==2048 || ButtonMatrixState ==8192 || ButtonMatrixState ==16384) //blank
+//				  {
+//					State=7;
+//				  }
+//				  else
+//				  {
+//					State=StateDisplay_Error;
+//				  }
+//				  break;
+//			  case StateDisplay_Num8 : //state = 8 number 0
+//				  if(ButtonMatrixState == 4096)//0
+//				  {
+//					  State =9;
+//				  }
+//				  else if(ButtonMatrixState ==8 ) //clear
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==128 ) //backspace
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==2048 || ButtonMatrixState ==8192 || ButtonMatrixState ==16384) //blank
+//				  {
+//					State=8;
+//				  }
+//				  else
+//				  {
+//					State=StateDisplay_Error;
+//				  }
+//				  break;
+//			  case StateDisplay_Num9 : //state = 9 number 2
+//				  if(ButtonMatrixState == 512)//2
+//				  {
+//					  State =10;
+//				  }
+//				  else if(ButtonMatrixState ==8 ) //clear
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==128 ) //backspace
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==2048 || ButtonMatrixState ==8192 || ButtonMatrixState ==16384) //blank
+//				  {
+//					State=9;
+//				  }
+//				  else
+//				  {
+//					State=StateDisplay_Error;
+//				  }
+//				  break;
+//			  case StateDisplay_Num10 : //state = 10 number 2
+//				  if(ButtonMatrixState == 512)//2
+//				  {
+//					  State =StateDisplay_Sucess;
+//				  }
+//				  else if(ButtonMatrixState ==8 ) //clear
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==128 ) //backspace
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==2048 || ButtonMatrixState ==8192 || ButtonMatrixState ==16384) //blank
+//				  {
+//					State=10;
+//				  }
+//				  else
+//				  {
+//					State=StateDisplay_Error;
+//				  }
+//				  break;
+//			  case StateDisplay_Sucess:
+//				  if(ButtonMatrixState == 32768)//ok
+//				  {
+//					  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+//					  State =11;
+//				  }
+//				  else if(ButtonMatrixState ==8 ) //clear
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==128 ) //backspace
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==2048 || ButtonMatrixState ==8192 || ButtonMatrixState ==16384) //blank
+//				  {
+//					State=11;
+//				  }
+//				  else
+//				  {
+//					State=StateDisplay_Error;
+//				  }
+//				  break;
+//			  case StateDisplay_Error:
+//				  if(ButtonMatrixState ==8 ) //clear
+//				  {
+//					  State=0;
+//				  }
+//				  else if(ButtonMatrixState ==128 ) //backspace
+//				  {
+//					  State=0;
+//				  }
+//				  else
+//				  {
+//					State=StateDisplay_Error;
+//				  }
+//				  break;
+//		  }
+//
+//	  }
+//	  SwitchState[1] = SwitchState[0];
 
-
-	//     }
 
 
 
@@ -124,11 +430,98 @@ int main(void)
 
   //--------------------------------------------------------------------------------
     /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
   }
-  /* USER CODE END 3 */
 }
+    /* USER CODE BEGIN 3 */
+void check()
+{
+  SwitchState[0] = ButtonMatrixState;
+  //Press = Low , No = High
+  if(SwitchState[0] != 0 && SwitchState[1] == 0)
+  {
+	  DataBuffer = DataBuffer * 10;
+
+	  if(ButtonMatrixState == 1)
+	  {
+	   DataBuffer += 7;
+	   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	  }
+	  else if(ButtonMatrixState == 2)
+	  {
+		DataBuffer += 8;
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	  }
+	  else if(ButtonMatrixState == 4)
+	  {
+	   DataBuffer += 9;
+	   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	  }
+	  else if(ButtonMatrixState == 16)
+	  {
+		DataBuffer += 4;
+	  }
+	  else if(ButtonMatrixState == 32)
+	  {
+		DataBuffer += 5;
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	  }
+	  else if(ButtonMatrixState == 64)
+	  {
+		DataBuffer += 6;
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	  }
+	  else if(ButtonMatrixState == 256)
+	  {
+		DataBuffer += 1;
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	  }
+	  else if(ButtonMatrixState == 512)
+	  {
+		DataBuffer += 2;
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	  }
+	  else if(ButtonMatrixState == 1024)
+	  {
+		DataBuffer += 3;
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	  }
+	  else if(ButtonMatrixState == 4096)
+	  {
+		DataBuffer += 0;
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	  }
+	  else if(ButtonMatrixState ==8 ) //clear
+	  {
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+		DataBuffer = 0;
+	  }
+	  else if(ButtonMatrixState ==128 ) //backspace
+	  {
+		HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+		DataBuffer = DataBuffer * 0.010;
+
+	  }
+	  else if(ButtonMatrixState ==32768) //ok
+	  {
+	   DataBuffer = DataBuffer * 0.10;
+	   if(DataBuffer ==62340500022)
+	   {
+		   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+	   }
+	   else
+	   {
+		   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+	   }
+	  }
+	  else
+	  {
+	   DataBuffer = DataBuffer * 0.10;
+	  }
+	  SwitchState[1] = SwitchState[0];
+  }
+ }
+  /* USER CODE END 3 */
+
 
 /**
   * @brief System Clock Configuration
@@ -277,16 +670,18 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 //Function Implementation
-GPIO_TypeDef* ButtonMatrixPort[8] = {GPIOA,       GPIOB,      GPIOB,      GPIOB,             GPIOA,      GPIOC,      GPIOB,      GPIOA     };
-uint16_t      ButtonMatrixPin [8] = {GPIO_PIN_10, GPIO_PIN_3, GPIO_PIN_5, GPIO_PIN_4,        GPIO_PIN_9, GPIO_PIN_7, GPIO_PIN_6, GPIO_PIN_7};
-uint8_t       ButtonMatrixLine    = 0;
-GPIO_PinState SwitchState[2];
-long long DataBuffer=0;
+GPIO_TypeDef* ButtonMatrixPort[8] = {GPIOA,       GPIOB,      GPIOB,      GPIOB,
+										GPIOA,      GPIOC,      GPIOB,      GPIOA     };
+uint16_t      ButtonMatrixPin [8] = {GPIO_PIN_10, GPIO_PIN_3, GPIO_PIN_5, GPIO_PIN_4,
+										GPIO_PIN_9, GPIO_PIN_7, GPIO_PIN_6, GPIO_PIN_7};
+uint16_t       ButtonMatrixLine    = 0;
+//GPIO_PinState SwitchState[2];
+//long long DataBuffer=0;
 int mod =0;
 //long long Show= 62340500022;
 void ButtonMatrixUpdate()
 {
-	if(HAL_GetTick() - ButtonMatrixTimeStamp >= 100)
+	if(HAL_GetTick() - ButtonMatrixTimeStamp >= 20)
 	{
 		ButtonMatrixTimeStamp = HAL_GetTick();
 	         //Press = Low , No = High
@@ -296,89 +691,7 @@ void ButtonMatrixUpdate()
 			if(PinState == GPIO_PIN_RESET) // Button is Pressed
 			{
 				ButtonMatrixState |= (uint16_t)1 << (i + ButtonMatrixLine * 4);
-
-			       DataBuffer = DataBuffer * 10;
-			       if(ButtonMatrixState == 1)
-			       {
-			        DataBuffer += 7;
-			        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-			       }
-			       else if(ButtonMatrixState == 2)
-			       {
-			      	DataBuffer += 8;
-			      	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-		           }
-			       else if(ButtonMatrixState == 4)
-			       {
-			        DataBuffer += 9;
-			        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-			       }
-			       else if(ButtonMatrixState == 16)
-			       {
-			        	DataBuffer += 4;
-			       }
-			       else if(ButtonMatrixState == 32)
-			       {
-			        	DataBuffer += 5;
-			        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-			       }
-			       else if(ButtonMatrixState == 64)
-			       {
-			        	DataBuffer += 6;
-			        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-			       }
-			       else if(ButtonMatrixState == 256)
-			       {
-			        	DataBuffer += 1;
-			        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-			       }
-			       else if(ButtonMatrixState == 512)
-			       {
-			        	DataBuffer += 2;
-			        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-			       }
-			       else if(ButtonMatrixState == 1024)
-			       {
-			        	DataBuffer += 3;
-			        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-			       }
-			       else if(ButtonMatrixState == 4096)
-			       {
-			        	DataBuffer += 0;
-			        	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-			       }
-			       else if(ButtonMatrixState ==8 ) //clear
-			       {
-			    	    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-			        	DataBuffer = 0;
-			       }
-			       else if(ButtonMatrixState ==128 ) //backspace
-			       {
-			    	    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-			    	    DataBuffer = DataBuffer * 0.010;
-
-			       }
-			       else if(ButtonMatrixState ==32768) //ok
-			       {
-			    	   DataBuffer = DataBuffer * 0.10;
-			    	   if(DataBuffer ==62340500022)
-			    	   {
-			    		   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
-			    	   }
-			    	   else
-			    	   {
-			    		   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
-			    	   }
-
-			       }
-
-			       else
-			       {
-			    	   DataBuffer = DataBuffer * 0.10;
-			       }
-
-			       //SwitchState[1] = SwitchState[0];
-
+				//check();
 			}
 			else
 			{
@@ -392,7 +705,7 @@ void ButtonMatrixUpdate()
 
 		uint8_t NextOutputPin = ButtonMatrixLine + 4;
 		HAL_GPIO_WritePin(ButtonMatrixPort[NextOutputPin], ButtonMatrixPin[NextOutputPin], GPIO_PIN_RESET);
-		SwitchState[0] = HAL_GPIO_ReadPin(ButtonMatrixPort[NowOutputPin], ButtonMatrixPin[NowOutputPin]);
+		//SwitchState[0] = HAL_GPIO_ReadPin(ButtonMatrixPort[NowOutputPin], ButtonMatrixPin[NowOutputPin]);
 	}
 }
 
