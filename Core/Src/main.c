@@ -130,9 +130,13 @@ int main(void)
   {
 	  ButtonMatrixUpdate();
 	  check();
-	  if (DataBuffer >= 623405000220)
+//	  if (DataBuffer >= 623405000220)
+//	  {
+//		  DataBuffer = 62340500022;
+//	  }
+	  if (DataBuffer > 99999999999)
 	  {
-		  DataBuffer = 62340500022;
+		  DataBuffer = DataBuffer *0.1;
 	  }
 //	  if (SwitchState[0] == 0 && SwitchState[1] != 0)
 //	 	  {
